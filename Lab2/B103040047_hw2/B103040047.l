@@ -20,7 +20,7 @@ Letter [a-zA-Z]
 Operator [\+\-\*]
 /* put two-characters symbol first */
 symbol (:=)|(==)|(<=)|(>=)|\;|\:|\(|\)|\>|\<|\=|\[|\]|\+|\-|\*|\/|\.
-space [ ]
+space [ \t]
 eol \r\n|\n
 ID [a-zA-Z_][a-zA-Z0-9_]{0,14}
 /* inside the single quote, the single quotes must be next to each other */
@@ -40,234 +40,234 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
 %%
 <*>[Aa][Bb][Ss][Oo][Ll][Uu][Tt][Ee] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL ;
     return ABSOLUTE;
 }
 
 <*>[Aa][Nn][Dd] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
 	BEGIN INITIAL;
     return AND;
 }
 
 <*>[Bb][Ee][Gg][Ii][Nn] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
 	BEGIN INITIAL;
     return BBEGIN;
 }
 
 <*>[Bb][Rr][Ee][Aa][Kk] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
 	BEGIN INITIAL;
     return BREAK;
 }
 
 <*>[Cc][Aa][Ss][Ee] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
 	BEGIN INITIAL;
     return CASE;
 }
 
 <*>[Cc][Oo][Nn][Ss][Tt] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
 	BEGIN INITIAL;
     return CONST;
 }
 
 <*>[Cc][Oo][Nn][Tt][Ii][Nn][Uu][Ee] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
 	BEGIN INITIAL;
     return CONTINUE;
 }
 
 <*>[Dd][Oo] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
 	BEGIN INITIAL;
     return DO;
 }
 
 <*>[Ee][Ll][Ss][Ee] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
 	BEGIN INITIAL;
     return ELSE;
 }
 
 <*>[Ee][Nn][Dd] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
 	BEGIN INITIAL;
     return END;
 }
 
 <*>[Ff][Oo][Rr] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
 	BEGIN INITIAL;
     return FOR;
 }
 
 <*>[Ff][Uu][Nn][Cc][Tt][Ii][Oo][Nn] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
 	BEGIN INITIAL;
     return FUNCTION;
 }
 
 <*>[Ii][Ff] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
 	BEGIN INITIAL;
     return IF;
 }
 
 <*>[Mm][Oo][Dd] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
 	BEGIN INITIAL;
     return MOD;
 }
 
 <*>[Nn][Ii][Ll] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
 	BEGIN INITIAL;
     return NIL;
 }
 
 <*>[Nn][Oo][Tt] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
 	BEGIN INITIAL;
     return NOT;
 }
 
 <*>[Oo][Bb][Jj][Ee][Cc][Tt]  {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
 	BEGIN INITIAL;
     return OBJECT;
 }
 
 <*>[Oo][Ff] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
 	BEGIN INITIAL;
     return OF;
 }
@@ -276,189 +276,203 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
     if(charCount == 1 && valid == 1)
         printf("Line: %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
 	BEGIN INITIAL;
     return OR;
 }
 
 <*>[Pp][Rr][Oo][Gg][Rr][Aa][Mm] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
 	BEGIN INITIAL;
     return PROGRAM;
 }
 
 <*>[Tt][Hh][Ee][Nn] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
 	BEGIN INITIAL;
     return THEN;
 }
 
 <*>[Tt][Oo] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
 	BEGIN INITIAL;
     return TO;
 }
 
 <*>[Vv][Aa][Rr] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
 	BEGIN INITIAL;
     return VAR;
 }
 
 <*>[Ww][Hh][Ii][Ll][Ee] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
 	BEGIN INITIAL;
     return WHILE;
 }
 
 <*>[Aa][Rr][Rr][Aa][Yy] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
 	BEGIN INITIAL;
     return ARRAY;
 }
 
 <*>[Ii][Nn][Tt][Ee][Gg][Ee][Rr] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
 	BEGIN INITIAL;
     return INTEGER;
 }
 
 <*>[Dd][Oo][Uu][Bb][Ll][Ee] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL;
 	return DOUBLE;
 }
 
 <*>[Ww][Rr][Ii][Tt][Ee] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL;
 	return WRITE;
 }
 
 <*>[Ww][Rr][Ii][Tt][Ee][Ll][Nn] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL;
 	return WRITELN;
 }
 
 <*>[Ss][Tt][Rr][Ii][Nn][Gg] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL;
 	return STRING;
 }
 
 <*>[Ff][Ll][Oo][Aa][Tt] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL;
 	return FLOAT;
 }
 
 <*>[Rr][Ee][Aa][Dd] {
     if(charCount == 1 && valid == 1)
-        printf("Line: %d: ", lineCount);
+        printf("Line %d: ", lineCount);
     if(valid == 1)
-        printf("%s\n", yytext);
+        printf("%s", yytext);
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.reserved_word=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL;
 	return READ;
 }
 
+<*>[Rr][Ee][Aa][Ll] {
+    if(charCount == 1 && valid == 1)
+        printf("Line %d: ", lineCount);
+    if(valid == 1)
+        printf("%s", yytext);
+    pre_c = charCount;
+    pre_l = lineCount;
+    charCount += yyleng;
+	yylval.token=strdup(yytext);
+    BEGIN INITIAL;
+	return RREAL;
+}
+
+
 <*>{space} {
-	if(charCount != 1 && valid == 1)
+	if(charCount == 1 && valid == 1)
         printf("Line %d: ",lineCount);
     if(valid == 1)
-        printf(" ");
+        printf("%s", yytext);
     charCount++;
 }
 <*>[ ]*{eol} {
@@ -467,14 +481,9 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
     valid = 1; // reset the valid
     lineCount++;
     charCount = 1;
-	return NEWLINE;
 }
 
-{symbol} {
-    last_token_type = 3;
-	printf("Line: %d, 1st char: %d, \"%s\" is a \"symbol\".\n", lineCount, charCount, yytext);
-    charCount += yyleng;
-}
+
 <*>":=" {
     if(charCount == 1 && valid == 1)
         printf("Line %d: ",lineCount);
@@ -483,7 +492,7 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.symbol=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL;
 	return ASSIGN; // assignment
 }
@@ -495,7 +504,7 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.symbol=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL;
 	return EQUALLNESS; // test equalness
 }
@@ -507,7 +516,7 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.symbol=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL;
 	return LE;// less than or equal to
 }
@@ -519,7 +528,7 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.symbol=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL;
 	return GE; // greater than or equal to 
 }
@@ -531,7 +540,7 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.symbol=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL;
 	return SEMICOLON;
 }
@@ -543,7 +552,7 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.symbol=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL;
 	return COLON;
 }
@@ -555,7 +564,7 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.symbol=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL;
 	return COMMA;
 }
@@ -567,21 +576,21 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
 	pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.symbol=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL;
 	return NOTEQUAL;
 }
 <*>"/" {
-	if(charCount == 1 && valid == 1)
+    if(charCount == 1 && valid == 1)
         printf("Line %d: ",lineCount);
     if(valid == 1)
         printf("%s",yytext);
-	pre_c = charCount;
+    pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.symbol=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL;
-	return SLASH;
+	return DIVIDE;// right square bracket
 }
 <*>"^" {
 	if(charCount == 1 && valid == 1)
@@ -591,7 +600,7 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
 	pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.symbol=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL;
 	return UPARROW;
 }
@@ -603,7 +612,7 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.symbol=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL;
 	return LPARENTHESES;
 }
@@ -615,7 +624,7 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.symbol=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL;
 	return RPARENTHESES;
 }
@@ -627,7 +636,7 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.symbol=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL;
 	return GT;// greater than
 }
@@ -639,7 +648,7 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.symbol=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL;
 	return LT;// less than
 }
@@ -651,7 +660,7 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.symbol=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL;
 	return EQUAL;
 }
@@ -663,7 +672,7 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.symbol=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL;
 	return LSB; // left square bracket
 }
@@ -675,7 +684,7 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.symbol=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL;
 	return RSB;// right square bracket
 }
@@ -687,7 +696,7 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.symbol=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL;
 	return PLUS;// right square bracket
 }
@@ -699,7 +708,7 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.symbol=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL;
 	return MINUS;// right square bracket
 }
@@ -711,22 +720,11 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.symbol=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL;
 	return MUL;// right square bracket
 }
-<*>"/" {
-    if(charCount == 1 && valid == 1)
-        printf("Line %d: ",lineCount);
-    if(valid == 1)
-        printf("%s",yytext);
-    pre_c = charCount;
-    pre_l = lineCount;
-    charCount += yyleng;
-	yylval.symbol=strdup(yytext);
-    BEGIN INITIAL;
-	return DIVIDE;// right square bracket
-}
+
 <*>"." {
     if(charCount == 1 && valid == 1)
         printf("Line %d: ",lineCount);
@@ -735,7 +733,7 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.symbol=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN INITIAL;
 	return DOT;// right square bracket
 }
@@ -748,7 +746,7 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.name=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN op;
 	return ID;// right square bracket
 }
@@ -761,7 +759,7 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.name=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN op;
 	return INT;// right square bracket
 }
@@ -774,7 +772,7 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.name=strdup(yytext);
+	yylval.token=strdup(yytext);
     BEGIN op;
 	return REAL;// right square bracket
 } 
@@ -787,8 +785,8 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
     pre_c = charCount;
     pre_l = lineCount;
     charCount += yyleng;
-	yylval.name=strdup(yytext);
-    BEGIN INITIAL;
+	yylval.token=strdup(yytext);
+    BEGIN op;
 	return STR;// right square bracket
 }	
 
