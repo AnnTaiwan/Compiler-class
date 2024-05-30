@@ -4,10 +4,6 @@
 #include<string.h>
 #include "y.tab.h"
 
-// typedef struct Identifier{
-//     char name[16]; // longest id is 15 characters
-//     double value;
-// } Identifier;
 unsigned int charCount = 1, idCount=0, lineCount = 1, start_line = 0, start_charCount = 0, table_capacity = 0, invalid_Comment_or_not = 0, length_comment=0, length_invalid_Comment = 0, last_token_type = 0, valid = 1, pre_c=1, pre_l=1;
 
 %}
@@ -580,7 +576,7 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
     BEGIN INITIAL;
 	return NOTEQUAL;
 }
-<*>"/" {
+<op>"/" {
     if(charCount == 1 && valid == 1)
         printf("Line %d: ",lineCount);
     if(valid == 1)
@@ -712,7 +708,7 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
     BEGIN INITIAL;
 	return MINUS;// right square bracket
 }
-<*>"*" {
+<op>"*" {
     if(charCount == 1 && valid == 1)
         printf("Line %d: ",lineCount);
     if(valid == 1)
@@ -809,3 +805,4 @@ comment [(][*]([^*]|{eol}|([*]+([^*)]|{eol})))*[*]+[)]{eol}*
 int yywrap(){
     return 1;
 }
+

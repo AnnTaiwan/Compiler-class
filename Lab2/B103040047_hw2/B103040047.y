@@ -14,7 +14,7 @@ int id_count = 0, temp_id_count = 0, temp_arr_size = 0, arr_or_not = 0;
 	arr_or_not: 	in declare section record the id to see if it is array
 */
 
-extern int valid, pre_c, pre_l, charCount, lineCount;
+extern int valid, pre_c, pre_l, charCount, lineCount; // variable in '.l' file
 
 char *arr_id[MAX_CAPACITY / 4]; // record the id name in declare section, for later use to add into id_table
 
@@ -22,7 +22,8 @@ void yyerror(const char* message) {
 	valid = 0;
 	extern int yylineno;  // defined and maintained by flex
 	extern char* yytext;  // defined and maintained by flex
-	printf("Error: Invalid format at line %d, near '%s'.\n", yylineno, yytext);
+	printf("\tERROR: Invalid format between line %d and line %d or just at line %d, near '%s'.\n", pre_l-1,pre_l,pre_l,  yytext);
+	// the structure error like missing token or not necesssary token happening, it can be indicated in two possible lines.
 }; 
 
 typedef struct Identifier{
@@ -32,19 +33,21 @@ typedef struct Identifier{
 	int isarray; // 1  : isarray
 	int arraysize; 
 } Identifier;  
-Identifier id_table[MAX_CAPACITY];
+Identifier id_table[MAX_CAPACITY]; // store declared variable info
 
 void add_id_table(char* typename)
 {
-	// check this ID exist in the id_table or not
+	// check this ID already exist in the id_table or not
 	int existing = 0; // exist in id_table or not
 	for(int i = 0; i < temp_id_count; i++)
 	{
 		int j = 0;
-		existing = 0;
+		existing = 0; // not exist
+		for(int h = 0; h < strlen(arr_id[i]); h++)
+			arr_id[i][h] = tolower(arr_id[i][h]); // due to case-insensitive, so saving the lower-case characters
 		for(j = 0; j < id_count; j++)
 		{
-			if(id_table[j].name == arr_id[i])
+			if(strcmp(id_table[j].name, arr_id[i]) == 0)
 			{
 				existing = 1;
 				break;
@@ -68,6 +71,7 @@ void add_id_table(char* typename)
 				id_table[id_count].isarray = arr_or_not;
 				id_table[id_count].arraysize = 0;
 			}
+			
 			id_table[id_count].name = arr_id[i];
 			for(int k = 0; k < strlen(typename); k++)
 				typename[k]=tolower(typename[k]); // due to case-insensitive
@@ -75,9 +79,7 @@ void add_id_table(char* typename)
 		}
 		
 	}
-	arr_or_not = 0;
-	temp_arr_size = 0;
-	temp_id_count = 0;
+	
 }
 char* find_in_id_table(char* idname)
 {
@@ -109,11 +111,13 @@ char* find_exp_type(char* findexp)
 	return ""; // not existed ID
 }
 %}
+
 %union 
 {
 	char* token;
 } 
-%type <token> prog prog_name dec_list dec id_list type array_type standtype stmt_section stmt_list assign for initial_expression final_expression sim_exp term exp relational_operator var_id if body read read_list write write_list value number
+//
+%type <token> prog prog_name dec_list dec id_list type array_type standtype stmt_section stmt_list assign for initial_expression final_expression sim_exp term exp relational_operator var_id if body read read_list write write_list value number 
 %token <token> ABSOLUTE AND BBEGIN BREAK CASE CONST CONTINUE DO ELSE END FOR FUNCTION IF MOD NIL NOT OBJECT OF OR PROGRAM THEN TO VAR WHILE ARRAY INTEGER DOUBLE WRITE WRITELN STRING CHAR FLOAT READ RREAL  //reserved word
 %token <token> ASSIGN EQUALLNESS LE GE SEMICOLON COLON COMMA NOTEQUAL UPARROW LPARENTHESES RPARENTHESES LT GT EQUAL LSB RSB PLUS MINUS MUL DIVIDE DOT NEWLINE
 %token <token> ID INT REAL STR
@@ -125,30 +129,60 @@ prog : PROGRAM prog_name SEMICOLON VAR dec_list SEMICOLON BBEGIN stmt_section SE
 		valid = 0; // error
 		printf("\rLine %d, at char %d, ",pre_l,pre_c+3);
 		printf("syntax error, unexpected $end, expecting DOT'.'\n");
-	 };
-	 //| error;
+	 }
+	 | error '\n' {  yyclearin; yyerrok;}; 
+	 
 prog_name: ID;
 
 dec_list: dec_list SEMICOLON dec 
-		| dec;
+		| dec_list dec
+		{
+			valid = 0; // error
+			printf("\nLine %d, ",pre_l - 1);
+			printf("Not found ';' in the end of the declaration.               \n");
+		} 
+		| dec
+		| error '\n' {  yyerrok;};
 dec: id_list COLON type // record the id_name first, then check if it can added into id_table later.
+	{
+		arr_or_not = 0;
+		temp_arr_size = 0;
+		temp_id_count = 0;
+	}
    | id_list ASSIGN type
    {
    		valid = 0; // error
 		printf("\rLine %d, ",pre_l);
 		printf("Unexpected '%s', expecting ':' for declaring the variables.               \n",$2);
+		
+		// not successfully declared
+		id_count -= temp_id_count;
+		
+		arr_or_not = 0;
+		temp_arr_size = 0;
+		temp_id_count = 0;
    }
    | id_list relational_operator type
    {
    		valid = 0; // error
 		printf("\rLine %d, ",pre_l);
 		printf("Unexpected '%s', expecting ':' for declaring the variables.               \n",$2);
+		
+		// not successfully declared
+		id_count -= temp_id_count;
+		
+		arr_or_not = 0;
+		temp_arr_size = 0;
+		temp_id_count = 0;
    };
+   
 id_list : ID {arr_id[temp_id_count++] = $1;} // record the declared id in var section 
-	    | id_list COMMA ID {arr_id[temp_id_count++] = $3;}; 
+	    | id_list COMMA ID {arr_id[temp_id_count++] = $3; }
+	    | error '\n' {  yyerrok;};
 type: array_type 
 	| standtype {arr_or_not = 0; temp_arr_size = 0; add_id_table($1);}; // deal with the type of id_list and add them into id_table
-array_type: ARRAY LSB INT DOT DOT INT RSB OF standtype {arr_or_not = 1; temp_arr_size = atoi($6) - atoi($3); add_id_table($9);};
+array_type: ARRAY LSB INT DOT DOT INT RSB OF standtype {arr_or_not = 1; temp_arr_size = atoi($6) - atoi($3); add_id_table($9);}
+          | error '\n' {  yyerrok;};
 standtype: INTEGER
 		 | STRING 
 		 | RREAL
@@ -156,8 +190,15 @@ standtype: INTEGER
 		 | FLOAT 
 		 | CHAR;
 
-stmt_section: stmt_section SEMICOLON stmt_list 
-			| stmt_list;
+stmt_section:  stmt_section  stmt_list 
+			{
+				valid = 0; // error
+				printf("\nLine %d, ",pre_l - 1);
+				printf("Not found ';' in the end of the statement.               \n");
+			}
+            | stmt_section SEMICOLON stmt_list 
+			| stmt_list
+			;
 
 			       
          
@@ -166,7 +207,7 @@ stmt_list: if
          | for
          | read
          | write
-         ;
+         | error '\n' {  yyerrok; };
 
 
 assign: var_id ASSIGN sim_exp
@@ -176,7 +217,6 @@ assign: var_id ASSIGN sim_exp
 		
 		char* temp_idtype1 = find_in_id_table($1);
 		
-		//printf("	### Test: %s, %s and %s\n", temp_idtype1, temp_exptype1, temp_exptype3);
 		if(strcmp(temp_idtype1, "") == 0) // $1 not existed in id_tale
 		{
 			valid = 0; // error
@@ -193,7 +233,7 @@ assign: var_id ASSIGN sim_exp
 		{
 			valid = 0; // error
 			printf("\rLine %d, ",pre_l);
-			printf("Error: got the syntax error of assignment's sim_exp part, so you can see the above message to see he details.   \n");
+			printf("Error: got the syntax error of assignment's sim_exp part, so you can see the above message to see the details.   \n");
 		}
 		else if(strcmp(temp_exptype3, "integer") == 0 && strcmp(temp_exptype1, "real") == 0) // acceptable, don't print error msg.
 		{
@@ -215,20 +255,20 @@ assign: var_id ASSIGN sim_exp
 		char* temp_idtype1 = find_in_id_table($1);
 		
 		valid = 0; // error
-		if(temp_idtype1 == "") // not exist in id_tale
+		if(strcmp(temp_idtype1, "") == 0) // not exist in id_tale
 		{
 			printf("\rLine %d, ",pre_l);
 			printf("(1) identifier not found '%s', and make sure to declare it first. (2) syntax error, unexpected '%s', expecting ':='\n", $1, $2);
 		}
-		else if(temp_exptype3 == "") // not exist in id_tale
+		else if(strcmp(temp_exptype3, "") == 0) // not exist in id_tale
 		{
 			printf("\rLine %d, ",pre_l);
 			printf("(1) identifier not found '%s', and make sure to declare it first. (2) syntax error, unexpected '%s', expecting ':='\n", $3, $2);
 		}
-		else if(temp_exptype3 == "compound_type") // not exist in id_tale
+		else if(strcmp(temp_exptype3, "compound_type") == 0) // error sim_exp
 		{
 			printf("\rLine %d, ",pre_l);
-			printf("(1) Error: got the syntax error of assignment's sim_exp part, so you can see the above message to see he details. (2) syntax error, unexpected '%s', expecting ':='\n", $2);
+			printf("(1) Error: got the syntax error of assignment's sim_exp part, so you can see the above message to see the details. (2) syntax error, unexpected '%s', expecting ':='\n", $2);
 		}
 		else // can't use relational_operator in the middle
 		{
@@ -237,7 +277,7 @@ assign: var_id ASSIGN sim_exp
 		}
 	  }
 	  ;
-	  //| error;
+	  
 for: FOR var_id ASSIGN initial_expression TO final_expression DO body;
 initial_expression: sim_exp;
 final_expression: exp;
@@ -335,7 +375,7 @@ sim_exp: term
 			{
 				valid = 0; // error
 				printf("\rLine %d, ",pre_l);
-				printf("Error: Operator is not overloaded: '%s' - '%s'.                    \n", temp_exptype1, temp_exptype3);
+				printf("Error: Operator is not overloaded: '%s' or '%s'.                    \n", temp_exptype1, temp_exptype3);
 				$$ = strdup("compound_type"); // still compound_type
 			}
 			else if(strcmp(temp_exptype3, "integer") == 0 && strcmp(temp_exptype1, "real") == 0)
@@ -366,7 +406,7 @@ term: value
 		{
 			valid = 0; // error
 			printf("\rLine %d, ",pre_l);
-			printf("Error: Operator is not overloaded: '%s' - '%s'.                    \n", temp_exptype1, temp_exptype3);
+			printf("Error: Operator is not overloaded: '%s' * '%s'.                    \n", temp_exptype1, temp_exptype3);
 			$$ = strdup("compound_type"); // still compound_type
 		}	
 		else if(strcmp(temp_exptype3, "integer") == 0 && strcmp(temp_exptype1, "real") == 0)
@@ -395,7 +435,7 @@ term: value
 		{
 			valid = 0; // error
 			printf("\rLine %d, ",pre_l);
-			printf("Error: Operator is not overloaded: '%s' - '%s'.                    \n", temp_exptype1, temp_exptype3);
+			printf("Error: Operator is not overloaded: '%s' // '%s'.                    \n", temp_exptype1, temp_exptype3);
 			$$ = strdup("compound_type"); // still compound_type
 		}	
 		else if(strcmp(temp_exptype3, "integer") == 0 && strcmp(temp_exptype1, "real") == 0)
@@ -425,7 +465,7 @@ term: value
 		{
 			valid = 0; // error
 			printf("\rLine %d, ",pre_l);
-			printf("Error: Operator is not overloaded: '%s' - '%s'.                    \n", temp_exptype1, temp_exptype3);
+			printf("Error: Operator is not overloaded: '%s' mod '%s'.                    \n", temp_exptype1, temp_exptype3);
 			$$ = strdup("compound_type"); // still compound_type
 		}		
 		else if(strcmp(temp_exptype3, "integer") == 0 && strcmp(temp_exptype1, "real") == 0)
@@ -449,7 +489,50 @@ term: value
 		
 	};
 exp: sim_exp
-   | exp relational_operator sim_exp;
+	{
+		char* temp_exptype1 = find_exp_type($1);
+		if(strcmp(temp_exptype1, "") == 0) // $1 not existed in id_tale
+		{
+			valid = 0; // error
+			printf("\rLine %d, ",pre_l);
+			printf("identifier not found '%s', and make sure to declare it first.               \n",$1);
+		}
+	}
+   | exp relational_operator sim_exp
+   {
+   		char* temp_exptype1 = find_exp_type($1);
+		char* temp_exptype3 = find_exp_type($3);
+		if(strcmp(temp_exptype1, "") == 0) // $1 not existed in id_tale
+		{
+			valid = 0; // error
+			printf("\rLine %d, ",pre_l);
+			printf("identifier not found '%s', and make sure to declare it first.               \n",$1);
+		}
+		else if(strcmp(temp_exptype3, "") == 0) // $3 is an ID, but not declared yet
+		{
+			valid = 0; // error
+			printf("\rLine %d, ",pre_l);
+			printf("identifier not found '%s', and make sure to declare it first.               \n",$3);
+		}		
+		else if(strcmp(temp_exptype3, "integer") == 0 && strcmp(temp_exptype1, "real") == 0)
+		{
+			$$ = $1;
+		}
+		else if(strcmp(temp_exptype3, "real") == 0 && strcmp(temp_exptype1, "integer") == 0)
+		{
+			$$ = $3;
+		}
+		else if(strcmp(temp_exptype1, temp_exptype3) != 0) 
+		{ // type mismatch and the third one is not compound type like 'integer / string'
+		 // if so return this is compound type
+			valid = 0; // error
+			printf("\rLine %d, ", pre_l);
+			printf("Incompatible types: got '%s', expecting '%s'                    \n", temp_exptype3, temp_exptype1);
+			$$ = strdup("compound_type");
+		}
+		else // return this normal type
+			$$ = $1;
+   };
 relational_operator: LE | GE | LT | GT | NOTEQUAL | EQUAL;
 var_id: ID
 	  | ID LSB sim_exp RSB
@@ -528,6 +611,7 @@ value: var_id
 number: INT
 	  | REAL
 	  ;
+
 %%
 int main()
 {

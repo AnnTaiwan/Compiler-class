@@ -1,10 +1,13 @@
 FILE_lex=	B103040047.l
-PROG_lex=	lex.yy.c
-all:	$(PROG_lex)
-	gcc $(PROG_lex) -o demo -lfl
+FILE_YACC=	B103040047.y
+all:	clean y.tab.c lex.yy.c
+	gcc lex.yy.c y.tab.c  -lfl -o demo
 
-$(PROG_lex):	$(FILE_lex)
+y.tab.c:
+	bison -y -d $(FILE_YACC)
+
+lex.yy.c:
 	flex $(FILE_lex)
 
 clean:
-	rm demo.exe $(PROG_lex)
+	rm -f demo lex.yy.c y.tab.c y.tab.h
